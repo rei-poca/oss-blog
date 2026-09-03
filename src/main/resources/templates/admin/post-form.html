@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('写作')}"></head>
+<body>
+<header th:replace="~{layout :: nav}"></header>
+
+<main class="container">
+    <section class="hero" style="margin-top: 28px;">
+        <h1 th:text="${postId == null} ? '新建文章' : '编辑文章'">写作</h1>
+    </section>
+
+    <div class="auth-wrap" style="max-width: 760px; margin: 30px auto;">
+        <div class="auth-card">
+            <form method="post" th:object="${postForm}"
+                  th:action="${postId == null} ? '/admin/posts/new' : '/admin/posts/' + ${postId} + '/edit'">
+                <div class="field">
+                    <label for="title">标题</label>
+                    <input id="title" type="text" th:field="*{title}" placeholder="输入文章标题">
+                    <div class="form-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">错误</div>
+                </div>
+                <div class="field">
+                    <label for="content">正文</label>
+                    <textarea id="content" rows="14" th:field="*{content}" placeholder="支持纯文本，保留换行"></textarea>
+                    <div class="form-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">错误</div>
+                </div>
+                <div class="field">
+                    <label for="excerpt">摘要（可选，留空自动截取正文）</label>
+                    <textarea id="excerpt" rows="3" th:field="*{excerpt}"></textarea>
+                </div>
+                <div class="field">
+                    <label>标签</label>
+                    <div class="checkbox-row">
+                        <label class="tag-check" th:each="tag : ${allTags}">
+                            <input type="checkbox" name="tagIds" th:value="${tag.id}"
+                                   th:checked="${postForm.tagIds != null && postForm.tagIds.contains(tag.id)}">
+                            <span th:text="${tag.name}">标签</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="tag-check">
+                        <input type="checkbox" th:field="*{published}"> 立即发布
+                    </label>
+                    <label class="tag-check">
+                        <input type="checkbox" th:field="*{featured}"> 首页精选
+                    </label>
+                </div>
+                <button class="btn" type="submit"
+                        th:text="${postId == null} ? '保存' : '保存修改'">保存</button>
+                <a class="btn" style="background: #aaa;" th:href="@{/admin}">取消</a>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>

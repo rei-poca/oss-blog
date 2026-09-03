@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('首页')}"></head>
+<body>
+<header th:replace="~{layout :: nav}"></header>
+
+<main class="container">
+    <section class="hero">
+        <h1>欢迎来到轻博客</h1>
+        <p>一个可注册、可写作、可评论、可搜索的个人博客系统</p>
+    </section>
+
+    <div class="empty" th:if="${posts.isEmpty()}">
+        <p>暂无文章，请稍后再来。</p>
+    </div>
+
+    <h2 class="section-title" th:if="${!posts.isEmpty()}">最新文章</h2>
+    <section class="post-grid">
+        <article class="post-card" th:each="post : ${posts}">
+            <span class="featured-badge" th:if="${post.featured}">精选</span>
+            <h3><a th:href="@{/post/{slug}(slug=${post.slug})}" th:text="${post.title}">标题</a></h3>
+            <div class="card-meta">
+                <span th:text="${post.author.username}">作者</span> ·
+                <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">日期</span>
+            </div>
+            <p class="card-excerpt" th:text="${post.excerpt}">摘要</p>
+            <div class="tag-list">
+                <a class="tag" th:each="tag : ${post.tags}"
+                   th:href="@{/tag/{slug}(slug=${tag.slug})}" th:text="${tag.name}">标签</a>
+            </div>
+        </article>
+    </section>
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>

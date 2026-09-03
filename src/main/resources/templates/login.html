@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('登录')}"></head>
+<body>
+<header th:replace="~{layout :: nav}"></header>
+
+<main class="container">
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <h1>登录</h1>
+            <div class="alert alert-success" th:if="${registerSuccess}" th:text="${registerSuccess}">注册成功</div>
+            <div class="alert alert-error" th:if="${param.error}">用户名或密码错误</div>
+            <form th:action="@{/login}" method="post">
+                <div class="field">
+                    <label for="username">用户名</label>
+                    <input id="username" name="username" type="text" required autofocus>
+                </div>
+                <div class="field">
+                    <label for="password">密码</label>
+                    <input id="password" name="password" type="password" required>
+                </div>
+                <button class="btn btn-block" type="submit">登录</button>
+            </form>
+            <p style="text-align: center; margin-top: 16px; font-size: 14px;">
+                还没有账号？<a th:href="@{/register}">立即注册</a>
+            </p>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' · 轻博客'">轻博客</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:fragment="nav" class="site-header">
+    <div class="container nav">
+        <a class="brand" th:href="@{/}">轻博客</a>
+        <form class="search-form" th:action="@{/search}" method="get" role="search">
+            <input type="search" name="q" placeholder="搜索文章…" aria-label="搜索文章" th:value="${q}">
+            <button type="submit">搜索</button>
+        </form>
+        <div class="nav-links">
+            <a th:href="@{/}">首页</a>
+            <th:block th:if="${currentUsername == null}">
+                <a th:href="@{/login}">登录</a>
+                <a th:href="@{/register}">注册</a>
+            </th:block>
+            <th:block th:if="${currentUsername != null}">
+                <a th:if="${isAdmin}" th:href="@{/admin}">管理后台</a>
+                <span class="nav-user" th:text="'你好，' + ${currentUsername}">你好</span>
+                <form class="inline" th:action="@{/logout}" method="post">
+                    <button class="link-btn" type="submit">登出</button>
+                </form>
+            </th:block>
+        </div>
+    </div>
+</header>
+
+<footer th:fragment="footer" class="site-footer">
+    <div class="container">
+        <p>轻博客 · 开源个人博客系统二次开发 · 可注册 / 可写作 / 可评论 / 可搜索</p>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head(${post.title})}"></head>
+<body>
+<header th:replace="~{layout :: nav}"></header>
+
+<main class="container">
+    <article class="article">
+        <h1 th:text="${post.title}">标题</h1>
+        <div class="article-meta">
+            <span th:text="${post.author.username}">作者</span> ·
+            <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">日期</span> ·
+            <span th:text="'约 ' + ${readingMinutes} + ' 分钟读完'">阅读时长</span>
+            <div class="tag-list" style="margin-top: 10px;">
+                <a class="tag" th:each="tag : ${post.tags}"
+                   th:href="@{/tag/{slug}(slug=${tag.slug})}" th:text="${tag.name}">标签</a>
+            </div>
+        </div>
+        <div class="post-content" th:text="${post.content}">正文</div>
+
+        <section class="related" th:if="${!related.isEmpty()}">
+            <h3 class="section-title">相关推荐</h3>
+            <div class="related-list">
+                <div class="related-item" th:each="item : ${related}">
+                    <h4><a th:href="@{/post/{slug}(slug=${item.post.slug})}" th:text="${item.post.title}">相关标题</a></h4>
+                    <span class="card-meta" th:text="'约 ' + ${item.readingMinutes} + ' 分钟读完'">时长</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="comments">
+            <h3 class="section-title" th:text="'评论 (' + ${#lists.size(comments)} + ')'">评论</h3>
+            <div class="comment" th:each="c : ${comments}">
+                <span class="c-author" th:text="${c.author.username}">作者</span>
+                <span class="c-time" th:text="${#temporals.format(c.createdAt, 'yyyy-MM-dd HH:mm')}">时间</span>
+                <p th:text="${c.content}">内容</p>
+            </div>
+            <div class="empty" th:if="${comments.isEmpty()}">
+                <p>暂无评论，来抢沙发吧。</p>
+            </div>
+
+            <div th:if="${currentUsername != null}" style="margin-top: 20px;">
+                <div class="alert alert-success" th:if="${commentSuccess}" th:text="${commentSuccess}">成功</div>
+                <div class="alert alert-error" th:if="${commentError}" th:text="${commentError}">错误</div>
+                <form class="comment-form" th:action="@{/post/{slug}/comment(slug=${post.slug})}" method="post"
+                      th:object="${commentForm}">
+                    <div class="field">
+                        <textarea name="content" th:field="*{content}" placeholder="写下你的评论…"></textarea>
+                    </div>
+                    <button class="btn" type="submit">发表评论</button>
+                </form>
+            </div>
+            <div class="empty" th:if="${currentUsername == null}" style="margin-top: 20px;">
+                <p><a th:href="@{/login}">登录</a> 后即可发表评论。</p>
+            </div>
+        </section>
+    </article>
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>

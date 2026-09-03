@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head(${tag.name})}"></head>
+<body>
+<header th:replace="~{layout :: nav}"></header>
+
+<main class="container">
+    <section class="hero">
+        <h1 th:text="'标签：' + ${tag.name}">标签</h1>
+        <p th:text="'共 ' + ${#lists.size(posts)} + ' 篇文章'">数量</p>
+    </section>
+
+    <div class="empty" th:if="${posts.isEmpty()}">
+        <p>该标签下暂无文章。</p>
+    </div>
+
+    <section class="post-grid">
+        <article class="post-card" th:each="post : ${posts}">
+            <span class="featured-badge" th:if="${post.featured}">精选</span>
+            <h3><a th:href="@{/post/{slug}(slug=${post.slug})}" th:text="${post.title}">标题</a></h3>
+            <div class="card-meta">
+                <span th:text="${post.author.username}">作者</span> ·
+                <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">日期</span>
+            </div>
+            <p class="card-excerpt" th:text="${post.excerpt}">摘要</p>
+        </article>
+    </section>
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>

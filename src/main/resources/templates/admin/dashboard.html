@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('管理后台')}"></head>
+<body>
+<header th:replace="~{layout :: nav}"></header>
+
+<main class="container">
+    <section class="hero" style="margin-top: 28px;">
+        <h1>管理后台</h1>
+        <p>管理你的文章、草稿与标签。</p>
+    </section>
+
+    <div class="alert alert-success" th:if="${adminSuccess}" th:text="${adminSuccess}">成功</div>
+
+    <div style="margin: 20px 0;">
+        <a class="btn" th:href="@{/admin/posts/new}">+ 新建文章</a>
+    </div>
+
+    <div class="empty" th:if="${posts.isEmpty()}">
+        <p>还没有文章，点击上方按钮开始写作。</p>
+    </div>
+
+    <table class="admin-table" th:if="${!posts.isEmpty()}">
+        <thead>
+        <tr>
+            <th>标题</th>
+            <th>作者</th>
+            <th>状态</th>
+            <th>更新时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="post : ${posts}">
+            <td th:text="${post.title}">标题</td>
+            <td th:text="${post.author.username}">作者</td>
+            <td>
+                <span class="status" th:classappend="${post.published} ? 'status-published' : 'status-draft'"
+                      th:text="${post.published} ? '已发布' : '草稿'">状态</span>
+            </td>
+            <td th:text="${#temporals.format(post.updatedAt, 'yyyy-MM-dd HH:mm')}">时间</td>
+            <td>
+                <a th:href="@{/admin/posts/{id}/edit(id=${post.id})}">编辑</a>
+                <form class="inline" th:action="@{/admin/posts/{id}/delete(id=${post.id})}" method="post">
+                    <button class="link-btn" type="submit" onclick="return confirm('确定删除该文章？')">删除</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer th:replace="~{layout :: footer}"></footer>
+</body>
+</html>
