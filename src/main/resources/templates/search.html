@@ -10,6 +10,14 @@
         <p th:text="'共找到 ' + ${#lists.size(results)} + ' 条结果'">结果</p>
     </section>
 
+    <div class="filter-bar" th:if="${!tags.isEmpty()}">
+        <a class="filter-link" th:classappend="${tag == null or tag == ''} ? 'active' : ''"
+           th:href="@{/search(q=${q})}">全部</a>
+        <a class="filter-link" th:each="t : ${tags}"
+           th:classappend="${tag == t.slug} ? 'active' : ''"
+           th:href="@{/search(q=${q}, tag=${t.slug})}" th:text="${t.name}">标签</a>
+    </div>
+
     <div class="empty" th:if="${results.isEmpty()}">
         <p>没有找到与「<span th:text="${q}">关键词</span>」相关的文章，换个关键词试试吧。</p>
     </div>
@@ -24,6 +32,10 @@
         </div>
         <p class="card-excerpt"
            th:utext="${item.highlightedExcerpt}">摘要</p>
+        <div class="tag-list" th:if="${!item.post.tags.isEmpty()}">
+            <a class="tag" th:each="t : ${item.post.tags}"
+               th:href="@{/search(q=${q}, tag=${t.slug})}" th:text="${t.name}">标签</a>
+        </div>
     </div>
 </main>
 

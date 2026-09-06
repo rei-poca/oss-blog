@@ -489,6 +489,35 @@ mark {
     padding: 60px 0;
 }
 
+/* ---------- 搜索标签过滤 ---------- */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.filter-link {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--card);
+    border: 1px solid var(--line);
+}
+
+.filter-link:hover {
+    color: var(--primary-dark);
+    border-color: var(--primary);
+}
+
+.filter-link.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+}
+
 /* ---------- 响应式 ---------- */
 @media (max-width: 820px) {
     .post-grid, .related-list {

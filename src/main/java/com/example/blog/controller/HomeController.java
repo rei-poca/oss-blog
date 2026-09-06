@@ -92,8 +92,10 @@ public class HomeController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam(required = false, defaultValue = "") String q, Model model) {
-        List<Post> posts = postService.search(q);
+    public String search(@RequestParam(required = false, defaultValue = "") String q,
+                         @RequestParam(required = false) String tag,
+                         Model model) {
+        List<Post> posts = postService.search(q, tag);
         List<Map<String, Object>> results = new ArrayList<>();
         for (Post post : posts) {
             Map<String, Object> item = new HashMap<>();
@@ -103,6 +105,9 @@ public class HomeController {
             results.add(item);
         }
         model.addAttribute("q", q);
+        model.addAttribute("tag", tag);
+        model.addAttribute("activeTag",
+                (tag == null || tag.isBlank()) ? null : tagService.findBySlug(tag).orElse(null));
         model.addAttribute("results", results);
         model.addAttribute("tags", tagService.findAll());
         return "search";

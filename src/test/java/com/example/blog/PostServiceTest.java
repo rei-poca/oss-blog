@@ -49,4 +49,14 @@ class PostServiceTest {
                 .anyMatch(r -> r.getTags().stream().anyMatch(t -> postTagIds.contains(t.getId())));
         assertThat(sharesTag).isTrue();
     }
+
+    @Test
+    @Transactional
+    void searchFiltersByTag() {
+        List<Post> filtered = postService.search("Java", "java");
+        assertThat(filtered).isNotEmpty();
+        for (Post p : filtered) {
+            assertThat(p.getTags()).extracting(Tag::getSlug).contains("java");
+        }
+    }
 }
