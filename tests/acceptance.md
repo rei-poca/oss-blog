@@ -8,7 +8,7 @@
 
 执行命令：`.\gradlew.bat test`
 
-结果：**21 个用例全部通过**（BUILD SUCCESSFUL）。
+结果：**23 个用例全部通过**（BUILD SUCCESSFUL）。
 
 | 编号 | 测试方法 | 类型 | 前置条件 | 步骤 | 期望 | 实际 |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -22,15 +22,17 @@
 | F8 | tagPageFiltersPostsByTag | 功能 | 标签 java | GET /tag/java | 200，含对应文章 | 通过 |
 | F9 | searchHitsChineseKeyword | 功能 | 关键词「微服务」 | GET /search?q=微服务 | 200，命中并高亮 | 通过 |
 | F10 | searchNoResultShowsHint | 功能 | 不存在关键词 | GET /search?q=… | 200，提示「没有找到」 | 通过 |
-| F11 | adminCanCreatePost | 功能 | 管理员登录 | POST /admin/posts/new | 302 → /admin，文章数 +1 | 通过 |
-| F12 | adminCannotCreatePostWithEmptyTitle | 功能 | 空标题 | POST /admin/posts/new | 返回表单，提示「标题不能为空」 | 通过 |
-| F13 | memberCanComment | 功能 | 会员登录 | POST /post/…/comment | 302 → 文章页，评论 +1 | 通过 |
+| F11 | searchSupportsTagFilter | 功能 | 关键词「Java」+ 标签 java | GET /search?q=Java&tag=java | 200，渲染过滤栏 | 通过 |
+| F12 | adminCanCreatePost | 功能 | 管理员登录 | POST /admin/posts/new | 302 → /admin，文章数 +1 | 通过 |
+| F13 | adminCannotCreatePostWithEmptyTitle | 功能 | 空标题 | POST /admin/posts/new | 返回表单，提示「标题不能为空」 | 通过 |
+| F14 | memberCanComment | 功能 | 会员登录 | POST /post/…/comment | 302 → 文章页，评论 +1 | 通过 |
 | P1 | anonymousCannotAccessAdmin | 权限 | 匿名 | GET /admin | 302 → /login | 通过 |
 | P2 | memberCannotAccessAdmin | 权限 | 会员 | GET /admin | 403 | 通过 |
 | P3 | adminCanAccessAdmin | 权限 | 管理员 | GET /admin | 200，dashboard 视图 | 通过 |
 | P4 | anonymousCannotComment | 权限 | 匿名 | POST /post/…/comment | 302 → /login | 通过 |
 | S1 | readingMinutesIsEstimatedFromContentLength | 自主功能 | 纯函数 | 调用 BlogUtils.readingMinutes | 时长估算符合规则 | 通过 |
 | S2 | relatedPostsShareTagsAndExcludeSelf | 自主功能 | 种子数据 | 调用 PostService.related | 推荐非空、不含自身、共享标签 | 通过 |
+| S3 | searchFiltersByTag | 自主功能 | 种子数据 | 调用 PostService.search(q, tag) | 过滤结果均含指定标签 | 通过 |
 
 ## 手动测试用例（界面 / 响应式 / 恢复）
 

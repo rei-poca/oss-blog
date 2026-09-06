@@ -65,6 +65,22 @@ public class PostService {
         return postRepository.searchPublished(keyword.strip());
     }
 
+    /** 本地全文搜索 + 按标签过滤（tagSlug 为空时不过滤）。 */
+    public List<Post> search(String keyword, String tagSlug) {
+        List<Post> results = search(keyword);
+        if (tagSlug == null || tagSlug.isBlank()) {
+            return results;
+        }
+        Set<Long> taggedIds = postRepository
+                .findByPublishedTrueAndTagsSlugOrderByCreatedAtDesc(tagSlug)
+                .stream()
+                .map(Post::getId)
+                .collect(Collectors.toSet());
+        return results.stream()
+                .filter(p -> taggedIds.contains(p.getId()))
+                .toList();
+    }
+
     @Transactional
     public Post create(PostForm form, User author) {
         Post post = new Post();

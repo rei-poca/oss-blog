@@ -82,6 +82,14 @@ class ContentFlowIntegrationTest {
     }
 
     @Test
+    void searchSupportsTagFilter() throws Exception {
+        mockMvc.perform(get("/search").param("q", "Java").param("tag", "java"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("search"))
+                .andExpect(content().string(containsString("filter-bar")));
+    }
+
+    @Test
     void anonymousCannotAccessAdmin() throws Exception {
         mockMvc.perform(get("/admin"))
                 .andExpect(status().is3xxRedirection())
